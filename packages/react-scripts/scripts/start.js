@@ -29,19 +29,18 @@ const chromeDirPath = path.resolve(paths.appPath, 'chrome_user_data');
 
 let firstCompile = true;
 
-// for (const entryName in config.entry) {
-//   config.entry[entryName] = [
-//     'webpack-dev-server/client?http://localhost:' + config.devServer.port,
-//     'webpack/hot/dev-server'
-//   ].concat(config.entry[entryName])
-// }
+for (const entryName in config.entry) {
+  config.entry[entryName] = [
+    'webpack-dev-server/client?http://localhost:' + config.devServer.port,
+    'webpack/hot/dev-server',
+  ].concat(config.entry[entryName]);
+}
 
 const compiler = webpack(config);
 
 /* Waits until webpack compile finishes */
 compiler.hooks.done.tap({ name: 'Initial compile startup' }, () => {
   if (firstCompile) {
-    remoteDevServer({ host: 'localhost', port: 3100 });
     firstCompile = false;
     logger.info('Opening chrome');
     exec(
@@ -67,6 +66,8 @@ const init = async () => {
     if (err) {
       console.log(err);
     }
+
+    remoteDevServer({ host: 'localhost', port: 3100 });
 
     if (process.stdout.isTTY) {
       clearConsole();

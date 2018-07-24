@@ -15,7 +15,11 @@ module.exports = {
   entry: {
     ...config.entry,
     devListener: [paths.devWindowIndexJs],
-    devWindow: [paths.devWindowHelpers],
+    devWindow: [
+      require.resolve('../polyfills'),
+      paths.devWindowHelpers,
+      paths.appPopupIndexJs,
+    ],
   },
   plugins: [
     ...config.plugins,
@@ -25,7 +29,7 @@ module.exports = {
         additionalChunks: includeRuntimeChunk('devListener'),
       },
       'popup',
-      { name: 'devWindow', additionalChunks: ['popup'] },
+      { name: 'devWindow' },
     ]),
     new HotModuleReplacementPlugin(),
     new FriendlyErrorsPlugin(),

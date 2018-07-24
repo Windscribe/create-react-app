@@ -1,13 +1,17 @@
-/* global browser */
-import React, { Fragment } from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react';
+import { render } from 'react-dom';
 
 const root = document.querySelector('#app-frame');
 
 const App = () => (
-  <Fragment>
-    <h1>Hello there</h1>
-  </Fragment>
+  <>
+    <h1>
+      Extension ready! Start writing code!
+      <span role="img" aria-label="tada">
+        🎉
+      </span>
+    </h1>
+  </>
 );
 
-ReactDOM.render(<App />, root);
+render(<App />, root);
