@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 // @remove-on-eject-end
-'use strict';
 
 const path = require('path');
 const fs = require('fs');
@@ -53,8 +52,16 @@ module.exports = {
   appPath: resolveApp('.'),
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
-  appHtml: resolveApp('public/index.html'),
-  appIndexJs: resolveApp('src/index.js'),
+
+  appPopupHtml: resolveApp('public/popup.html'),
+  appPopupIndexJs: resolveApp('src/common/popup.js'),
+  appBackgroundHtml: resolveApp('public/background.html'),
+  appBackgroundIndexJs: resolveApp('src/common/background.js'),
+
+  devWindowIndexJs: resolveApp('src/dev/dev-window.js'),
+  devWindowHelpers: resolveApp('src/dev/dev-window-helpers.js'),
+  devWindowHtml: resolveApp('public/window.html'),
+
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   testsSetup: resolveApp('src/setupTests.js'),
@@ -74,8 +81,16 @@ module.exports = {
   appPath: resolveApp('.'),
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
-  appHtml: resolveApp('public/index.html'),
-  appIndexJs: resolveApp('src/index.js'),
+
+  appPopupHtml: resolveApp('public/popup.html'),
+  appPopupIndexJs: resolveApp('src/common/popup.js'),
+  appBackgroundHtml: resolveApp('public/background.html'),
+  appBackgroundIndexJs: resolveApp('src/common/background.js'),
+
+  devWindowIndexJs: resolveApp('src/dev/dev-window.js'),
+  devWindowHelpers: resolveApp('src/dev/dev-window-helpers.js'),
+  devWindowHtml: resolveApp('public/window.html'),
+
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   testsSetup: resolveApp('src/setupTests.js'),
@@ -99,8 +114,19 @@ if (useTemplate) {
     appPath: resolveApp('.'),
     appBuild: resolveOwn('../../build'),
     appPublic: resolveOwn('template/public'),
+
     appHtml: resolveOwn('template/public/index.html'),
     appIndexJs: resolveOwn('template/src/index.js'),
+
+    appPopupHtml: resolveApp('template/public/popup.html'),
+    appPopupIndexJs: resolveApp('template/src/common/popup.js'),
+    appBackgroundHtml: resolveApp('template/public/background.html'),
+    appBackgroundIndexJs: resolveApp('template/src/common/background.js'),
+
+    devWindowIndexJs: resolveApp('template/src/dev/dev-window.js'),
+    devWindowHelpers: resolveApp('template/src/dev/dev-window-helpers.js'),
+    devWindowHtml: resolveApp('public/window.html'),
+
     appPackageJson: resolveOwn('package.json'),
     appSrc: resolveOwn('template/src'),
     testsSetup: resolveOwn('template/src/setupTests.js'),

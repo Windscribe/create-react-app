@@ -7,9 +7,13 @@
 /coverage
 
 # production
+/dist
+
+#development
 /build
 
 # misc
+/chrome_user_data
 .DS_Store
 .env.local
 .env.development.local
