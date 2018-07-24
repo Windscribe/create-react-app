@@ -1,6 +1,6 @@
 {
   "name": "@windscribe/webext-scripts",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Custom react scripts for building webextensions",
   "repository": "/Windscribe/webext-scripts",
   "license": "MIT",
