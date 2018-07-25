@@ -29,13 +29,15 @@ const chromeDirPath = path.resolve(paths.appPath, 'chrome_user_data');
 
 let firstCompile = true;
 
-for (const entryName in config.entry) {
-  config.entry[entryName] = [
-    'webpack-dev-server/client?http://localhost:' + config.devServer.port,
-    'webpack/hot/dev-server',
-  ].concat(config.entry[entryName]);
-}
-
+Object.keys(config.entry).forEach(
+  entryName =>
+    (config.entry[entryName] = [
+      ...config.entry[entryName],
+      'webpack-dev-server/client?http://localhost:' + config.devServer.port,
+      'webpack/hot/dev-server',
+      require.resolve('../config/polyfills.js'),
+    ])
+);
 const compiler = webpack(config);
 
 /* Waits until webpack compile finishes */

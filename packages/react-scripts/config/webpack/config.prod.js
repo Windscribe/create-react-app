@@ -1,15 +1,18 @@
 const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-const config = require('./config.base');
+const paths = require('../paths');
 
-module.exports = {
-  ...config,
+const baseConfig = require('./config.base');
+const overrideConfig = require(paths.appConfig);
+
+const config = {
+  ...baseConfig,
   mode: 'production',
   // Don't attempt to continue if there are errors
   bail: true,
   plugins: [
-    ...config.plugins,
+    ...baseConfig.plugins,
 
     new UglifyJsPlugin({
       uglifyOptions: {
@@ -74,3 +77,5 @@ module.exports = {
     ),
   ],
 };
+
+module.exports = overrideConfig.webpack(config, process.env);

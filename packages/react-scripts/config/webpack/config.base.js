@@ -191,13 +191,13 @@ const plugins = [
   ]),
 ];
 
-const baseEntry = [require.resolve('../polyfills')];
+// const baseEntry = [require.resolve('../polyfills')];
 
 // Config
 module.exports = {
   entry: {
-    popup: [...baseEntry, paths.appPopupIndexJs],
-    background: [...baseEntry, paths.appBackgroundIndexJs],
+    popup: [paths.appPopupIndexJs],
+    background: [paths.appBackgroundIndexJs],
   },
   output: {
     path: paths.appBuild,

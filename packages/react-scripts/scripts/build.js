@@ -20,6 +20,14 @@ const runBuild = async target => {
 
   const config = require('../config/webpack/config.prod');
 
+  Object.keys(config.entry).forEach(
+    entryName =>
+      (config.entry[entryName] = [
+        ...config.entry[entryName],
+        require.resolve('../config/polyfills.js'),
+      ])
+  );
+
   await sleep(1000);
 
   return webpack({
