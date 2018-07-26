@@ -24,8 +24,6 @@ const publicUrl =
 
 const env = getClientEnv(publicUrl);
 
-// const nodeModules = path.resolve(__dirname, '../../../../node_modules')
-
 const alias = {};
 
 /* Webpack config entry */
@@ -190,8 +188,6 @@ const plugins = [
     },
   ]),
 ];
-
-// const baseEntry = [require.resolve('../polyfills')];
 
 // Config
 module.exports = {
