@@ -24,8 +24,6 @@ const publicUrl =
 
 const env = getClientEnv(publicUrl);
 
-// const nodeModules = path.resolve(__dirname, '../../../../node_modules')
-
 const alias = {};
 
 /* Webpack config entry */
@@ -191,13 +189,11 @@ const plugins = [
   ]),
 ];
 
-const baseEntry = [require.resolve('../polyfills')];
-
 // Config
 module.exports = {
   entry: {
-    popup: [...baseEntry, paths.appPopupIndexJs],
-    background: [...baseEntry, paths.appBackgroundIndexJs],
+    popup: [paths.appPopupIndexJs],
+    background: [paths.appBackgroundIndexJs],
   },
   output: {
     path: paths.appBuild,

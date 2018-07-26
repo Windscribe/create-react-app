@@ -6,10 +6,15 @@ const paths = require('../../config/paths');
 
 const generateManifest = require('./generate-manifest');
 
-module.exports = async buildTarget => {
+const { preparationMethods } = require(paths.appConfig);
+module.exports = async (buildTarget = 'dev') => {
   try {
     await rimraf(paths.appBuild);
     await generateManifest(buildTarget);
+
+    if (preparationMethods) {
+      preparationMethods.forEach(fn => fn(buildTarget));
+    }
 
     return 'done';
   } catch (e) {

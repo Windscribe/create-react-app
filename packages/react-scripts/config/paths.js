@@ -52,6 +52,7 @@ module.exports = {
   appPath: resolveApp('.'),
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
+  appConfig: resolveApp('webext.config.js'),
 
   appPopupHtml: resolveApp('public/popup.html'),
   appPopupIndexJs: resolveApp('src/common/popup.js'),
@@ -81,6 +82,7 @@ module.exports = {
   appPath: resolveApp('.'),
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
+  appConfig: resolveApp('webext.config.js'),
 
   appPopupHtml: resolveApp('public/popup.html'),
   appPopupIndexJs: resolveApp('src/common/popup.js'),
@@ -114,6 +116,7 @@ if (useTemplate) {
     appPath: resolveApp('.'),
     appBuild: resolveOwn('../../build'),
     appPublic: resolveOwn('template/public'),
+    appConfig: resolveOwn('template/webext.config.js'),
 
     appHtml: resolveOwn('template/public/index.html'),
     appIndexJs: resolveOwn('template/src/index.js'),

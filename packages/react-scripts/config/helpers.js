@@ -1,5 +1,6 @@
 'use strict';
 
+const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const _ = require('lodash');
@@ -43,9 +44,22 @@ const parallelizeLoader = (isDev = process.env.NODE_ENV === 'development') => ({
   },
 });
 
+const createCompiler = (config, additionalChunks) =>
+  webpack({
+    ...config,
+    entry: Object.entries(config.entry).reduce(
+      (prev, [key, value]) => ({
+        ...prev,
+        [key]: [...value, ...additionalChunks],
+      }),
+      {}
+    ),
+  });
+
 module.exports = {
   requireParam,
   createHtmlTemplates,
   includeRuntimeChunk,
   parallelizeLoader,
+  createCompiler,
 };

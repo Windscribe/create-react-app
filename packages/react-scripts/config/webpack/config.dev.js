@@ -4,25 +4,22 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 
 const { createHtmlTemplates, includeRuntimeChunk } = require('../helpers');
 
-const config = require('./config.base');
+const baseConfig = require('./config.base');
 const paths = require('../paths');
+const overrideConfig = require(paths.appConfig);
 
 const port = process.env.PORT || 3000;
 
-module.exports = {
+const config = {
   mode: 'development',
-  ...config,
+  ...baseConfig,
   entry: {
-    ...config.entry,
+    ...baseConfig.entry,
     devListener: [paths.devWindowIndexJs],
-    devWindow: [
-      require.resolve('../polyfills'),
-      paths.devWindowHelpers,
-      paths.appPopupIndexJs,
-    ],
+    devWindow: [...baseConfig.entry.popup, paths.devWindowHelpers],
   },
   plugins: [
-    ...config.plugins,
+    ...baseConfig.plugins,
     ...createHtmlTemplates([
       {
         name: 'background',
@@ -43,5 +40,15 @@ module.exports = {
     clientLogLevel: 'none',
     overlay: false,
     quiet: true,
+  },
+};
+
+const overwroteConfig = overrideConfig.webpack(config, process.env);
+
+module.exports = {
+  ...overwroteConfig,
+  entry: {
+    ...overwroteConfig.entry,
+    devWindow: [...overwroteConfig.entry.popup, paths.devWindowHelpers],
   },
 };

@@ -21,7 +21,10 @@ const config = require('../config/webpack/config.dev');
 
 const paths = require('../config/paths');
 
+const { createCompiler } = require('../config/helpers');
+
 const extPath = path.resolve(paths.appBuild);
+
 const chromeExecPath =
   '/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome';
 
@@ -29,14 +32,11 @@ const chromeDirPath = path.resolve(paths.appPath, 'chrome_user_data');
 
 let firstCompile = true;
 
-for (const entryName in config.entry) {
-  config.entry[entryName] = [
-    'webpack-dev-server/client?http://localhost:' + config.devServer.port,
-    'webpack/hot/dev-server',
-  ].concat(config.entry[entryName]);
-}
-
-const compiler = webpack(config);
+const compiler = createCompiler(config, [
+  `webpack-dev-server/client?http://localhost:${config.devServer.port}`,
+  'webpack/hot/dev-server',
+  require.resolve('../config/polyfills.js'),
+]);
 
 /* Waits until webpack compile finishes */
 compiler.hooks.done.tap({ name: 'Initial compile startup' }, () => {
