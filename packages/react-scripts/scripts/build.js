@@ -22,7 +22,7 @@ const runBuild = async target => {
 
   await sleep(1000);
 
-  return createCompiler(
+  const compiler = createCompiler(
     {
       ...config,
       output: {
@@ -39,6 +39,8 @@ const runBuild = async target => {
     },
     [require.resolve('../config/polyfills.js')]
   );
+
+  return compiler.run();
 };
 
 platforms.forEach(runBuild);
