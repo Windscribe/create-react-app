@@ -44,7 +44,7 @@ compiler.hooks.done.tap({ name: 'Initial compile startup' }, () => {
     firstCompile = false;
     logger.info('Opening chrome');
     exec(
-      `${chromeExecPath} --load-extension=${extPath} --user-data-dir=${chromeDirPath}`,
+      `${chromeExecPath} --disable-default-apps --load-extension=${extPath} --user-data-dir=${chromeDirPath}`,
       err => {
         if (err) throw err;
       }
