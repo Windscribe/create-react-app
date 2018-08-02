@@ -79,6 +79,23 @@ const appBabelConfig = {
   ],
 };
 
+const webExtConfigBabel = require(paths.appConfig).babel;
+const appBabelConfig = {
+  presets: [require.resolve('babel-preset-react-app')],
+  plugins: [
+    [
+      require.resolve('babel-plugin-named-asset-import'),
+      {
+        loaderMap: {
+          svg: {
+            ReactComponent: 'svgr/webpack![path]',
+          },
+        },
+      },
+    ],
+  ],
+};
+
 /* Webpack config entry */
 const rules = [
   // require.ensure is a nonstandard feature, so it should be disabled
