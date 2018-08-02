@@ -1,6 +1,7 @@
-const webpack = require('webpack')
-const fs = require('fs-extra')
-const path = require('path')
+const webpack = require('webpack');
+const fs = require('fs-extra');
+const path = require('path');
+const babelMerge = require('babel-merge');
 
 /* Plugins */
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -61,6 +62,40 @@ const resolve = {
 const jsRegex = /\.(js|jsx|mjs)$/
 const exclude = [/[/\\\\]node_modules[/\\\\]/]
 
+const webExtConfigBabel = require(paths.appConfig).babel;
+const appBabelConfig = {
+  presets: [require.resolve('babel-preset-react-app')],
+  plugins: [
+    [
+      require.resolve('babel-plugin-named-asset-import'),
+      {
+        loaderMap: {
+          svg: {
+            ReactComponent: 'svgr/webpack![path]',
+          },
+        },
+      },
+    ],
+  ],
+};
+
+const webExtConfigBabel = require(paths.appConfig).babel;
+const appBabelConfig = {
+  presets: [require.resolve('babel-preset-react-app')],
+  plugins: [
+    [
+      require.resolve('babel-plugin-named-asset-import'),
+      {
+        loaderMap: {
+          svg: {
+            ReactComponent: 'svgr/webpack![path]',
+          },
+        },
+      },
+    ],
+  ],
+};
+
 /* Webpack config entry */
 const rules = [
   // require.ensure is a nonstandard feature, so it should be disabled
@@ -100,19 +135,9 @@ const rules = [
           {
             loader: require.resolve('babel-loader'),
             options: {
-              presets: [require.resolve('babel-preset-react-app')],
-              plugins: [
-                [
-                  require.resolve('babel-plugin-named-asset-import'),
-                  {
-                    loaderMap: {
-                      svg: {
-                        ReactComponent: 'svgr/webpack![path]',
-                      },
-                    },
-                  },
-                ],
-              ],
+              // Allows users to overwrite their babel config
+              ...babelMerge(appBabelConfig, webExtConfigBabel),
+
               // This is a feature of `babel-loader` for webpack (not Babel itself).
               // It enables caching results in ./node_modules/.cache/babel-loader/
               // directory for faster rebuilds.
