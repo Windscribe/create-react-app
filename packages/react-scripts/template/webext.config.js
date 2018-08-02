@@ -1,4 +1,5 @@
 module.exports = {
+  babel: {},
   webpack: (config, env) => {
     return config;
   },
