@@ -10,7 +10,13 @@
   "bugs": {
     "url": "https://github.com/facebook/create-react-app/issues"
   },
-  "files": ["bin", "config", "scripts", "template", "utils"],
+  "files": [
+    "bin",
+    "config",
+    "scripts",
+    "template",
+    "utils"
+  ],
   "bin": {
     "react-scripts": "./bin/react-scripts.js"
   },
@@ -25,6 +31,7 @@
     "babel-eslint": "8.2.3",
     "babel-jest": "22.4.3",
     "babel-loader": "8.0.0-beta.4",
+    "babel-merge": "^2.0.0",
     "babel-plugin-named-asset-import": "1.0.0-next.3e165448",
     "babel-preset-react-app": "4.0.0-next.3e165448",
     "bfj": "5.2.0",
@@ -71,10 +78,10 @@
     "thread-loader": "1.1.5",
     "uglifyjs-webpack-plugin": "1.2.5",
     "url-loader": "1.0.1",
+    "webextension-polyfill": "^0.3.0",
     "webpack": "4.8.3",
     "webpack-dev-server": "3.1.4",
     "webpack-manifest-plugin": "2.0.3",
-    "webextension-polyfill": "^0.3.0",
     "whatwg-fetch": "2.0.4",
     "write-file-webpack-plugin": "^4.3.2"
   },
@@ -91,6 +98,11 @@
       "last 2 firefox versions",
       "last 2 edge versions"
     ],
-    "production": [">1%", "last 4 versions", "Firefox ESR", "not ie < 11"]
+    "production": [
+      ">1%",
+      "last 4 versions",
+      "Firefox ESR",
+      "not ie < 11"
+    ]
   }
 }
