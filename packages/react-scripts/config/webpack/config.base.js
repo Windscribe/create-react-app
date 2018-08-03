@@ -4,26 +4,26 @@ const path = require('path');
 const babelMerge = require('babel-merge');
 
 /* Plugins */
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const { parallelizeLoader } = require('../helpers')
+const { parallelizeLoader } = require('../helpers');
 
-const getClientEnv = require('../envs')
-const paths = require('../paths')
+const getClientEnv = require('../envs');
+const paths = require('../paths');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath =
-  process.env.NODE_ENV === 'development' ? '/' : paths.servedPath
+  process.env.NODE_ENV === 'development' ? '/' : paths.servedPath;
 
 // `publicUrl` is just like `publicPath`, but we will provide it to our app
 // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
 // Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
 const publicUrl =
-  process.env.NODE_ENV === 'development' ? '' : publicPath.slice(0, -1)
+  process.env.NODE_ENV === 'development' ? '' : publicPath.slice(0, -1);
 // Get environment variables to inject into our app.
 
-const env = getClientEnv(publicUrl)
+const env = getClientEnv(publicUrl);
 
 /* Webpack config entry */
 const resolve = {
@@ -50,17 +50,17 @@ const resolve = {
   // https://github.com/facebook/create-react-app/issues/253
   modules: ['node_modules'].concat(
     // It is guaranteed to exist because we tweak it in `env.js`
-    process.env.NODE_PATH.split(path.delimiter).filter(Boolean),
+    process.env.NODE_PATH.split(path.delimiter).filter(Boolean)
   ),
   alias: {
     // Support React Native Web, Might be useful if we migrate to it
     // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
     'react-native': 'react-native-web',
   },
-}
+};
 
-const jsRegex = /\.(js|jsx|mjs)$/
-const exclude = [/[/\\\\]node_modules[/\\\\]/]
+const jsRegex = /\.(js|jsx|mjs)$/;
+const exclude = [/[/\\\\]node_modules[/\\\\]/];
 
 const webExtConfigBabel = require(paths.appConfig).babel;
 const appBabelConfig = {
@@ -170,21 +170,21 @@ const rules = [
   },
   // ** STOP ** Are you adding a new loader?
   // Make sure to add the new loader(s) before the "file" loader.
-]
+];
 
 const findWebextPolyfill = () => {
-  const localNM = paths.appNodeModules
+  const localNM = paths.appNodeModules;
   /* There must be a better way */
-  const monoRepoNM = path.resolve(__dirname, '../../../../node_modules')
+  const monoRepoNM = path.resolve(__dirname, '../../../../node_modules');
 
-  const localWebExtPath = path.join(localNM, 'webextension-polyfill')
+  const localWebExtPath = path.join(localNM, 'webextension-polyfill');
 
   if (fs.existsSync(localWebExtPath)) {
-    return localWebExtPath
+    return localWebExtPath;
   }
 
-  return path.resolve(monoRepoNM, 'webextension-polyfill')
-}
+  return path.resolve(monoRepoNM, 'webextension-polyfill');
+};
 
 const plugins = [
   new webpack.DefinePlugin(env.stringified),
@@ -196,11 +196,11 @@ const plugins = [
     {
       from: path.resolve(
         findWebextPolyfill(),
-        'dist/browser-polyfill.min.js.map',
+        'dist/browser-polyfill.min.js.map'
       ),
     },
   ]),
-]
+];
 
 // Config
 module.exports = {
@@ -242,4 +242,4 @@ module.exports = {
   // Turn off performance processing because we utilize
   // our own hints via the FileSizeReporter
   performance: false,
-}
+};
