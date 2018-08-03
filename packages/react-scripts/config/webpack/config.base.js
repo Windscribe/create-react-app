@@ -95,6 +95,11 @@ const rules = [
   // back to the "file" loader at the end of the loader list.
   {
     oneOf: [
+      // https://github.com/smooth-code/svgr/tree/master/packages/webpack#usage
+      {
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
+      },
       // "url" loader works like "file" loader except that it embeds assets
       // smaller than specified limit in bytes as data URLs to avoid requests.
       // A missing `test` is equivalent to a match.
