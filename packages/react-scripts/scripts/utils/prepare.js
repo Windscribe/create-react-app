@@ -12,8 +12,10 @@ module.exports = async (buildTarget = 'dev') => {
     await rimraf(paths.appBuild);
     await generateManifest(buildTarget);
 
-    if (preparationMethods) {
-      preparationMethods.forEach(fn => fn(buildTarget));
+    if (preparationMethods.length > 0) {
+      for (let fn of preparationMethods) {
+        await fn(buildTarget);
+      }
     }
 
     return 'done';
