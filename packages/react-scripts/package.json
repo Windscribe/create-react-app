@@ -1,6 +1,6 @@
 {
   "name": "react-scripts-ws-webextension",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Custom react scripts for building webextensions",
   "repository": "/Windscribe/webext-scripts",
   "license": "MIT",
