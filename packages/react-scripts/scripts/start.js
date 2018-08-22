@@ -29,7 +29,9 @@ const compiler = createCompiler(config, [
 compiler.hooks.done.tap({ name: 'Initial compile startup' }, () => {
   if (firstCompile) {
     firstCompile = false;
-    openChrome();
+    if (process.env.OPEN_CHROME) {
+      openChrome();
+    }
   }
 });
 
@@ -48,7 +50,9 @@ const init = async () => {
       console.log(err);
     }
 
-    remoteDevServer({ host: 'localhost', port: 3100 });
+    if (process.env.ENABLE_REMOTE_REDUX) {
+      remoteDevServer({ host: 'localhost', port: 3100 });
+    }
 
     if (process.stdout.isTTY) {
       clearConsole();
