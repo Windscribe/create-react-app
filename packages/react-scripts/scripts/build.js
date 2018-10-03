@@ -43,4 +43,8 @@ const runBuild = async target => {
   return compiler.run();
 };
 
-platforms.forEach(runBuild);
+(async () => {
+  for (platform of platforms) {
+    await runBuild(platform);
+  }
+})();
