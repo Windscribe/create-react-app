@@ -1,66 +1,52 @@
 const fs = require('fs-extra');
 const path = require('path');
 const logger = require('consola');
-const { merge } = require('lodash');
+let merge = require('deepmerge');
+let compose = require('lodash/fp/compose');
+let _ = require('lodash');
 
 const paths = require('../../config/paths');
 
-const package = require(paths.appPackageJson);
-
-const manifestDir = path.join(paths.appPublic, 'manifest');
+let fetchManifest = compose(
+  require,
+  file => path.resolve(paths.appPublic, 'manifest', `${file}.json`)
+);
 // Manifests
-const baseManifest = require(path.resolve(manifestDir, 'base.json'));
-const devManifest = require(path.resolve(manifestDir, 'dev.json'));
+const baseManifest = fetchManifest('base');
+const devManifest = fetchManifest('dev');
 
 const ENV = process.env.NODE_ENV;
 
-// Get the keys that are arrays
-const getKeys = obj =>
-  Object.keys(obj).filter(keyName => Array.isArray(obj[keyName]));
+let formatArrayEntry = (arr = []) =>
+  Object.entries(arr).reduce((obj, [k, v]) => {
+    if (Array.isArray(v)) {
+      obj[k] = _.uniq(v);
+    } else {
+      obj[k] = v;
+    }
 
-const getArray = (array = []) => array;
+    return obj;
+  }, {});
 
 module.exports = (buildTarget = process.env.BUILD_TARGET || 'chrome') => {
   logger.info(`Building manifest for target: ${buildTarget}`);
-  // const fileSystem = require('fs')
 
-  const buildManifest = require(path.resolve(
-    manifestDir,
-    `${buildTarget}.json`
-  ));
+  const buildManifest = fetchManifest(buildTarget);
 
-  // generates the manifest file using the package.json information
-  const generateManifest = async ({ env = ENV } = {}) => {
-    const arrayKeys = getKeys(baseManifest);
-
-    // Merge the array keys first
-    const mergedKeys = arrayKeys.map(keyName => {
-      let manifestKeys = [
-        ...getArray(baseManifest[keyName]),
-        ...getArray(buildManifest[keyName]),
-      ];
-
-      if (ENV === 'development') {
-        manifestKeys = [...manifestKeys, ...getArray(devManifest[keyName])];
-      }
-
-      return {
-        [keyName]: manifestKeys,
-      };
-    });
-
-    return merge(
-      baseManifest,
-      ENV === 'development' ? devManifest : {},
-      buildManifest,
-      {
-        version: package.version,
-      },
-      ...mergedKeys
+  let generateManifest = () =>
+    new Promise(resolve =>
+      compose(
+        resolve,
+        formatArrayEntry,
+        merge.all
+      )(
+        ENV === 'development'
+          ? [baseManifest, buildManifest, devManifest]
+          : [baseManifest, buildManifest]
+      )
     );
-  };
 
-  const writeManifest = (manifest, target = 'dev') =>
+  const writeManifest = (target = 'dev') => manifest =>
     new Promise(resolve => {
       // Check if the target is 'dev' then write out to build folder
       const outDir = path.join(
@@ -68,28 +54,23 @@ module.exports = (buildTarget = process.env.BUILD_TARGET || 'chrome') => {
       );
       fs.ensureDirSync(outDir);
 
-      fs
-        .writeFile(
-          path.join(outDir, 'manifest.json'),
-          JSON.stringify(manifest, null, 2)
-        )
+      fs.writeFile(
+        path.join(outDir, 'manifest.json'),
+        JSON.stringify(manifest, null, 2)
+      )
         .then(resolve)
         .catch(err => new Error(err));
     });
 
-  // If building prod build both ff and chrome
+  // // If building prod build both ff and chrome
   if (ENV === 'production') {
-    generateManifest().then(generatedManifest =>
-      writeManifest(generatedManifest, buildTarget)
-    );
+    generateManifest().then(writeManifest(buildTarget));
     // for running the dev server with prod data
-    generateManifest({ env: 'development' }).then(generatedManifest =>
-      writeManifest(generatedManifest)
-    );
+    // generateManifest({ env: 'development' }).then(writeManifest());
   } else {
     // Write to build
     generateManifest()
-      .then(generatedManifest => writeManifest(generatedManifest))
+      .then(writeManifest())
       .catch(console.log);
   }
 };
