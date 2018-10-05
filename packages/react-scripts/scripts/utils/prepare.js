@@ -9,11 +9,12 @@ const generateManifest = require('./generate-manifest');
 const { preparationMethods } = require(paths.appConfig);
 module.exports = async (buildTarget = 'dev') => {
   try {
-    if (buildTarget === 'dev') {
-      await rimraf(paths.appBuild);
-    } else {
-      await rimraf(`${paths.appBuild}/${buildTarget}`);
-    }
+    await rimraf(
+      buildTarget === 'dev'
+        ? paths.appBuild
+        : `${paths.appBuild}/${buildTarget}`
+    );
+
     await generateManifest(buildTarget);
 
     if (preparationMethods.length > 0) {
