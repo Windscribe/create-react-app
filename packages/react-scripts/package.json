@@ -62,6 +62,7 @@
     "mini-css-extract-plugin": "^0.4.0",
     "object-assign": "4.1.1",
     "optimize-css-assets-webpack-plugin": "^4.0.1",
+    "ora": "^3.0.0",
     "postcss-flexbugs-fixes": "3.3.1",
     "postcss-loader": "2.1.5",
     "promise": "8.0.1",
