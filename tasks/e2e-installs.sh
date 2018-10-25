@@ -86,7 +86,7 @@ yarn
 
 # Start local registry
 tmp_registry_log=`mktemp`
-nohup npx verdaccio@3.2.0 -c tasks/verdaccio.yaml &>$tmp_registry_log &
+(cd && nohup npx verdaccio@3.8.2 -c "$root_path"/tasks/verdaccio.yaml &>$tmp_registry_log &)
 # Wait for `verdaccio` to boot
 grep -q 'http address' <(tail -f $tmp_registry_log)
 
@@ -228,6 +228,17 @@ mkdir -p test-app-nested-paths-t3/aa
 npx create-react-app test-app-nested-paths-t3/aa/bb/cc/dd
 cd test-app-nested-paths-t3/aa/bb/cc/dd
 yarn start --smoke-test
+
+# ******************************************************************************
+# Test when PnP is enabled
+# ******************************************************************************
+cd "$temp_app_path"
+npx create-react-app test-app-pnp --use-pnp
+cd test-app-pnp
+! exists node_modules
+exists .pnp.js
+yarn start --smoke-test
+yarn build
 
 # Cleanup
 cleanup

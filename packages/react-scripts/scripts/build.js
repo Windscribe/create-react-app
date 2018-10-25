@@ -1,8 +1,8 @@
+'use strict';
 process.env.NODE_ENV = 'production';
 process.env.BABEL_ENV = 'production';
 
 const path = require('path');
-const sleep = require('shleep');
 const ora = require('ora');
 const { promisify } = require('util');
 const rimraf = promisify(require('rimraf'));
@@ -22,24 +22,21 @@ const compileBuild = target => () =>
   new Promise((resolve, reject) => {
     const config = require('../config/webpack/config.prod');
 
-    const compiler = createCompiler(
-      {
-        ...config,
-        bail: true,
-        output: {
-          ...config.output,
-          path: path.resolve(paths.appBuild, target),
-        },
-        plugins: [
-          ...config.plugins,
-          /*
+    const compiler = createCompiler({
+      ...config,
+      bail: true,
+      output: {
+        ...config.output,
+        path: path.resolve(paths.appBuild, target),
+      },
+      plugins: [
+        ...config.plugins,
+        /*
         The reason these plugins are not configured in `config.prod` is because there's some crazy bug that prevents templates from being written more than once at a time
       */
-          ...createHtmlTemplates(['background', 'popup']),
-        ],
-      },
-      [require.resolve('../config/polyfills.js')]
-    );
+        ...createHtmlTemplates(['background', 'popup']),
+      ],
+    });
 
     compiler.run((err, stats) => {
       if (err || stats.hasErrors()) {

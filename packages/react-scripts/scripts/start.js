@@ -1,3 +1,5 @@
+'use strict';
+
 process.env.NODE_ENV = 'development';
 process.env.BABEL_ENV = 'development';
 
@@ -22,7 +24,6 @@ let firstCompile = true;
 const compiler = createCompiler(config, [
   `webpack-dev-server/client?http://localhost:${config.devServer.port}`,
   'webpack/hot/dev-server',
-  require.resolve('../config/polyfills.js'),
 ]);
 
 /* Waits until webpack compile finishes */

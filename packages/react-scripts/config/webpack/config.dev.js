@@ -1,3 +1,4 @@
+'use strict';
 const { HotModuleReplacementPlugin } = require('webpack');
 const WritePlugin = require('write-file-webpack-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');

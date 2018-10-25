@@ -1,4 +1,4 @@
-const webpack = require('webpack');
+'use strict';
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 
