@@ -58,7 +58,7 @@ let startBuild = target =>
 
 (async () => {
   await rimraf(paths.appBuild);
-  for (platform of platforms) {
+  for (let platform of platforms) {
     let spinnyBoi = ora(`Starting build for ${platform}`).start();
     try {
       await startBuild(platform);
@@ -66,6 +66,7 @@ let startBuild = target =>
     } catch (e) {
       spinnyBoi.fail(`${platform} failed to build`);
 
+      console.log(e);
       process.exit();
     }
   }

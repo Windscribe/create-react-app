@@ -44,7 +44,7 @@ const parallelizeLoader = (isDev = process.env.NODE_ENV === 'development') => ({
   },
 });
 
-const createCompiler = (config, additionalChunks) =>
+const createCompiler = (config, additionalChunks = []) =>
   webpack({
     ...config,
     entry: Object.entries(config.entry).reduce(
