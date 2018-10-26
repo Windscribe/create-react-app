@@ -1,158 +1,73 @@
-// @remove-on-eject-begin
-/**
- * Copyright (c) 2015-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-// @remove-on-eject-end
 'use strict';
-
-// Do this as the first thing so that any code reading it knows the right env.
-process.env.BABEL_ENV = 'production';
 process.env.NODE_ENV = 'production';
-
-// Makes the script crash on unhandled rejections instead of silently
-// ignoring them. In the future, promise rejections that are not handled will
-// terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', err => {
-  throw err;
-});
-
-// Ensure environment variables are read.
-require('../config/env');
+process.env.BABEL_ENV = 'production';
 
 const path = require('path');
-const chalk = require('chalk');
-const fs = require('fs-extra');
-const webpack = require('webpack');
-const config = require('../config/webpack.config.prod');
+const ora = require('ora');
+const { promisify } = require('util');
+const rimraf = promisify(require('rimraf'));
+
 const paths = require('../config/paths');
-const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
-const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
-const printHostingInstructions = require('react-dev-utils/printHostingInstructions');
-const FileSizeReporter = require('react-dev-utils/FileSizeReporter');
-const printBuildError = require('react-dev-utils/printBuildError');
+const { createHtmlTemplates, createCompiler } = require('../config/helpers');
 
-const measureFileSizesBeforeBuild =
-  FileSizeReporter.measureFileSizesBeforeBuild;
-const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
-const useYarn = fs.existsSync(paths.yarnLockFile);
+const prepare = require('./utils/prepare');
 
-// These sizes are pretty large. We'll warn for bundles exceeding them.
-const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024;
-const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024;
+const platforms = require(paths.appPackageJson).webExtPlatforms || [
+  'chrome',
+  'firefox',
+];
 
-// Warn and crash if required files are missing
-if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
-  process.exit(1);
-}
+/* eslint-disable */
+const compileBuild = target => () =>
+  new Promise((resolve, reject) => {
+    const config = require('../config/webpack/config.prod');
 
-// First, read the current file sizes in build directory.
-// This lets us display how much they changed later.
-measureFileSizesBeforeBuild(paths.appBuild)
-  .then(previousFileSizes => {
-    // Remove all content but keep the directory so that
-    // if you're in it, you don't end up in Trash
-    fs.emptyDirSync(paths.appBuild);
-    // Merge with the public folder
-    copyPublicFolder();
-    // Start the webpack build
-    return build(previousFileSizes);
-  })
-  .then(
-    ({ stats, previousFileSizes, warnings }) => {
-      if (warnings.length) {
-        console.log(chalk.yellow('Compiled with warnings.\n'));
-        console.log(warnings.join('\n\n'));
-        console.log(
-          '\nSearch for the ' +
-            chalk.underline(chalk.yellow('keywords')) +
-            ' to learn more about each warning.'
-        );
-        console.log(
-          'To ignore, add ' +
-            chalk.cyan('// eslint-disable-next-line') +
-            ' to the line before.\n'
-        );
-      } else {
-        console.log(chalk.green('Compiled successfully.\n'));
-      }
+    const compiler = createCompiler({
+      ...config,
+      bail: true,
+      output: {
+        ...config.output,
+        path: path.resolve(paths.appBuild, target),
+      },
+      plugins: [
+        ...config.plugins,
+        /*
+        The reason these plugins are not configured in `config.prod` is because there's some crazy bug that prevents templates from being written more than once at a time
+      */
+        ...createHtmlTemplates(['background', 'popup']),
+      ],
+    });
 
-      console.log('File sizes after gzip:\n');
-      printFileSizesAfterBuild(
-        stats,
-        previousFileSizes,
-        paths.appBuild,
-        WARN_AFTER_BUNDLE_GZIP_SIZE,
-        WARN_AFTER_CHUNK_GZIP_SIZE
-      );
-      console.log();
-
-      const appPackage = require(paths.appPackageJson);
-      const publicUrl = paths.publicUrl;
-      const publicPath = config.output.publicPath;
-      const buildFolder = path.relative(process.cwd(), paths.appBuild);
-      printHostingInstructions(
-        appPackage,
-        publicUrl,
-        publicPath,
-        buildFolder,
-        useYarn
-      );
-    },
-    err => {
-      console.log(chalk.red('Failed to compile.\n'));
-      printBuildError(err);
-      process.exit(1);
-    }
-  );
-
-// Create the production build and print the deployment instructions.
-function build(previousFileSizes) {
-  console.log('Creating an optimized production build...');
-
-  let compiler = webpack(config);
-  return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
-      if (err) {
-        return reject(err);
+      if (err || stats.hasErrors()) {
+        reject(err);
+        return;
       }
-      const messages = formatWebpackMessages(stats.toJson({}, true));
-      if (messages.errors.length) {
-        // Only keep the first error. Others are often indicative
-        // of the same problem, but confuse the reader with noise.
-        if (messages.errors.length > 1) {
-          messages.errors.length = 1;
-        }
-        return reject(new Error(messages.errors.join('\n\n')));
-      }
-      if (
-        process.env.CI &&
-        (typeof process.env.CI !== 'string' ||
-          process.env.CI.toLowerCase() !== 'false') &&
-        messages.warnings.length
-      ) {
-        console.log(
-          chalk.yellow(
-            '\nTreating warnings as errors because process.env.CI = true.\n' +
-              'Most CI servers set it automatically.\n'
-          )
-        );
-        return reject(new Error(messages.warnings.join('\n\n')));
-      }
-      return resolve({
-        stats,
-        previousFileSizes,
-        warnings: messages.warnings,
-      });
+
+      resolve(stats);
     });
   });
-}
 
-function copyPublicFolder() {
-  fs.copySync(paths.appPublic, paths.appBuild, {
-    dereference: true,
-    filter: file => file !== paths.appHtml,
+let startBuild = target =>
+  new Promise((resolve, reject) => {
+    prepare(target)
+      .then(compileBuild(target))
+      .then(resolve)
+      .catch(reject);
   });
-}
+
+(async () => {
+  await rimraf(paths.appBuild);
+  for (let platform of platforms) {
+    let spinnyBoi = ora(`Starting build for ${platform}`).start();
+    try {
+      await startBuild(platform);
+      spinnyBoi.succeed(`${platform} build completed`);
+    } catch (e) {
+      spinnyBoi.fail(`${platform} failed to build`);
+
+      console.log(e);
+      process.exit();
+    }
+  }
+})();

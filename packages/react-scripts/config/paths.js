@@ -1,3 +1,4 @@
+'use strict';
 // @remove-on-eject-begin
 /**
  * Copyright (c) 2015-present, Facebook, Inc.
@@ -6,27 +7,26 @@
  * LICENSE file in the root directory of this source tree.
  */
 // @remove-on-eject-end
-'use strict';
 
 const path = require('path');
 const fs = require('fs');
 const url = require('url');
 
 // Make sure any symlinks in the project folder are resolved:
-// https://github.com/facebookincubator/create-react-app/issues/637
+// https://github.com/facebook/create-react-app/issues/637
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 const envPublicUrl = process.env.PUBLIC_URL;
 
-function ensureSlash(path, needsSlash) {
-  const hasSlash = path.endsWith('/');
+function ensureSlash(inputPath, needsSlash) {
+  const hasSlash = inputPath.endsWith('/');
   if (hasSlash && !needsSlash) {
-    return path.substr(path, path.length - 1);
+    return inputPath.substr(0, inputPath.length - 1);
   } else if (!hasSlash && needsSlash) {
-    return `${path}/`;
+    return `${inputPath}/`;
   } else {
-    return path;
+    return inputPath;
   }
 }
 
@@ -49,14 +49,25 @@ function getServedPath(appPackageJson) {
 // config after eject: we're in ./config/
 module.exports = {
   dotenv: resolveApp('.env'),
+  appPath: resolveApp('.'),
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
-  appHtml: resolveApp('public/index.html'),
-  appIndexJs: resolveApp('src/index.js'),
+  appConfig: resolveApp('webext.config.js'),
+
+  appPopupHtml: resolveApp('public/popup.html'),
+  appPopupIndexJs: resolveApp('src/common/popup.js'),
+  appBackgroundHtml: resolveApp('public/background.html'),
+  appBackgroundIndexJs: resolveApp('src/common/background.js'),
+
+  devWindowIndexJs: resolveApp('src/dev/dev-window.js'),
+  devWindowHelpers: resolveApp('src/dev/dev-window-helpers.js'),
+  devWindowHtml: resolveApp('public/window.html'),
+
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveApp('src/setupTests.js'),
+  proxySetup: resolveApp('src/setupProxy.js'),
   appNodeModules: resolveApp('node_modules'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
@@ -71,12 +82,22 @@ module.exports = {
   appPath: resolveApp('.'),
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
-  appHtml: resolveApp('public/index.html'),
-  appIndexJs: resolveApp('src/index.js'),
+  appConfig: resolveApp('webext.config.js'),
+
+  appPopupHtml: resolveApp('public/popup.html'),
+  appPopupIndexJs: resolveApp('src/common/popup.js'),
+  appBackgroundHtml: resolveApp('public/background.html'),
+  appBackgroundIndexJs: resolveApp('src/common/background.js'),
+
+  devWindowIndexJs: resolveApp('src/dev/dev-window.js'),
+  devWindowHelpers: resolveApp('src/dev/dev-window-helpers.js'),
+  devWindowHtml: resolveApp('public/window.html'),
+
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveApp('src/setupTests.js'),
+  proxySetup: resolveApp('src/setupProxy.js'),
   appNodeModules: resolveApp('node_modules'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
@@ -101,12 +122,25 @@ if (
     appPath: resolveApp('.'),
     appBuild: resolveOwn('../../build'),
     appPublic: resolveOwn('template/public'),
+    appConfig: resolveOwn('template/webext.config.js'),
+
     appHtml: resolveOwn('template/public/index.html'),
     appIndexJs: resolveOwn('template/src/index.js'),
+
+    appPopupHtml: resolveApp('template/public/popup.html'),
+    appPopupIndexJs: resolveApp('template/src/common/popup.js'),
+    appBackgroundHtml: resolveApp('template/public/background.html'),
+    appBackgroundIndexJs: resolveApp('template/src/common/background.js'),
+
+    devWindowIndexJs: resolveApp('template/src/dev/dev-window.js'),
+    devWindowHelpers: resolveApp('template/src/dev/dev-window-helpers.js'),
+    devWindowHtml: resolveApp('public/window.html'),
+
     appPackageJson: resolveOwn('package.json'),
     appSrc: resolveOwn('template/src'),
     yarnLockFile: resolveOwn('template/yarn.lock'),
     testsSetup: resolveOwn('template/src/setupTests.js'),
+    proxySetup: resolveOwn('template/src/setupProxy.js'),
     appNodeModules: resolveOwn('node_modules'),
     publicUrl: getPublicUrl(resolveOwn('package.json')),
     servedPath: getServedPath(resolveOwn('package.json')),

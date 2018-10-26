@@ -22,12 +22,23 @@ process.on('unhandledRejection', err => {
 
 // Ensure environment variables are read.
 require('../config/env');
+// @remove-on-eject-begin
+// Do the preflight check (only happens before eject).
+const verifyPackageTree = require('./utils/verifyPackageTree');
+if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
+  verifyPackageTree();
+}
+// @remove-on-eject-end
 
 const jest = require('jest');
 let argv = process.argv.slice(2);
 
-// Watch unless on CI or in coverage mode
-if (!process.env.CI && argv.indexOf('--coverage') < 0) {
+// Watch unless on CI, in coverage mode, or explicitly running all tests
+if (
+  !process.env.CI &&
+  argv.indexOf('--coverage') === -1 &&
+  argv.indexOf('--watchAll') === -1
+) {
   argv.push('--watch');
 }
 
@@ -72,7 +83,7 @@ function resolveJestDefaultEnvironment(name) {
   });
 }
 let cleanArgv = [];
-let env = 'node';
+let env = 'jsdom';
 let next;
 do {
   next = argv.shift();
