@@ -55,9 +55,9 @@ module.exports = {
   appConfig: resolveApp('webext.config.js'),
 
   appPopupHtml: resolveApp('public/popup.html'),
-  appPopupIndexJs: resolveApp('src/common/popup.js'),
+  appPopupIndexJs: resolveApp('src/popup.js'),
   appBackgroundHtml: resolveApp('public/background.html'),
-  appBackgroundIndexJs: resolveApp('src/common/background.js'),
+  appBackgroundIndexJs: resolveApp('src/background.js'),
 
   devWindowIndexJs: resolveApp('src/dev/dev-window.js'),
   devWindowHelpers: resolveApp('src/dev/dev-window-helpers.js'),
@@ -85,9 +85,9 @@ module.exports = {
   appConfig: resolveApp('webext.config.js'),
 
   appPopupHtml: resolveApp('public/popup.html'),
-  appPopupIndexJs: resolveApp('src/common/popup.js'),
+  appPopupIndexJs: resolveApp('src/popup.js'),
   appBackgroundHtml: resolveApp('public/background.html'),
-  appBackgroundIndexJs: resolveApp('src/common/background.js'),
+  appBackgroundIndexJs: resolveApp('src/background.js'),
 
   devWindowIndexJs: resolveApp('src/dev/dev-window.js'),
   devWindowHelpers: resolveApp('src/dev/dev-window-helpers.js'),
@@ -122,9 +122,9 @@ if (useTemplate) {
     appIndexJs: resolveOwn('template/src/index.js'),
 
     appPopupHtml: resolveApp('template/public/popup.html'),
-    appPopupIndexJs: resolveApp('template/src/common/popup.js'),
+    appPopupIndexJs: resolveApp('template/src/popup.js'),
     appBackgroundHtml: resolveApp('template/public/background.html'),
-    appBackgroundIndexJs: resolveApp('template/src/common/background.js'),
+    appBackgroundIndexJs: resolveApp('template/src/background.js'),
 
     devWindowIndexJs: resolveApp('template/src/dev/dev-window.js'),
     devWindowHelpers: resolveApp('template/src/dev/dev-window-helpers.js'),
