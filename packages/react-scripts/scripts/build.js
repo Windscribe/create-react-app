@@ -21,7 +21,6 @@ const platforms = require(paths.appPackageJson).webExtPlatforms || [
 const compileBuild = target => () =>
   new Promise((resolve, reject) => {
     const config = require('../config/webpack/config.prod');
-
     const compiler = createCompiler(
       {
         ...config,
@@ -68,6 +67,7 @@ let startBuild = target =>
       spinnyBoi.succeed(`${platform} build completed`);
     } catch (e) {
       spinnyBoi.fail(`${platform} failed to build`);
+      console.log(e);
 
       process.exit();
     }
