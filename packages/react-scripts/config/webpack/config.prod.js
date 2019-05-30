@@ -55,4 +55,4 @@ const config = {
   ],
 };
 
-module.exports = overrideConfig.webpack(config, process.env);
+module.exports = target => overrideConfig.webpack(config, process.env, target);

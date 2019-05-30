@@ -44,7 +44,7 @@ const config = {
   },
 };
 
-const overwroteConfig = overrideConfig.webpack(config, process.env);
+const overwroteConfig = overrideConfig.webpack(config, process.env, 'dev');
 
 module.exports = {
   ...overwroteConfig,

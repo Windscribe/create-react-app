@@ -20,7 +20,7 @@ const platforms = require(paths.appPackageJson).webExtPlatforms || [
 /* eslint-disable */
 const compileBuild = target => () =>
   new Promise((resolve, reject) => {
-    const config = require('../config/webpack/config.prod');
+    const config = require('../config/webpack/config.prod')(target);
 
     const compiler = createCompiler({
       ...config,
