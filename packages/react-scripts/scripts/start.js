@@ -11,8 +11,6 @@ const chalk = require('chalk');
 const clearConsole = require('react-dev-utils/clearConsole');
 const errorOverlayMiddleware = require('react-dev-utils/errorOverlayMiddleware');
 
-const remoteDevServer = require('remotedev-server');
-
 const config = require('../config/webpack/config.dev');
 const { createCompiler } = require('../config/helpers');
 
@@ -49,10 +47,6 @@ const init = async () => {
   server.listen(3000, '0.0.0.0', err => {
     if (err) {
       console.log(err);
-    }
-
-    if (process.env.ENABLE_REMOTE_REDUX) {
-      remoteDevServer({ host: 'localhost', port: 3100 });
     }
 
     if (process.stdout.isTTY) {

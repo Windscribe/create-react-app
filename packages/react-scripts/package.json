@@ -66,7 +66,6 @@
     "postcss-safe-parser": "4.0.1",
     "react-app-polyfill": "^0.1.2",
     "react-dev-utils": "^6.0.2",
-    "remotedev-server": "^0.2.6",
     "resolve": "1.8.1",
     "sass-loader": "7.1.0",
     "shleep": "^1.0.4",
