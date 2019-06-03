@@ -32,6 +32,10 @@ compiler.hooks.done.tap({ name: 'Initial compile startup' }, () => {
       openChrome();
     }
   }
+
+  if (process.env.START_SINGLE_RUN) {
+    process.exit();
+  }
 });
 
 const init = async () => {
