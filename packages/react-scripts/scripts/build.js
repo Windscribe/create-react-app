@@ -12,12 +12,13 @@ const { createHtmlTemplates, createCompiler } = require('../config/helpers');
 
 const prepare = require('./utils/prepare');
 
+let platforms;
 if (process.env.FF_ONLY) {
-  const platforms = ["firefox"];
+  platforms = ['firefox'];
 } else if (process.env.CHROME_ONLY) {
-  const platforms = ["chrome"];         
+  platforms = ['chrome'];
 } else {
-  const platforms = require(paths.appPackageJson).webExtPlatforms || [
+  platforms = require(paths.appPackageJson).webExtPlatforms || [
     'chrome',
     'firefox',
   ];
