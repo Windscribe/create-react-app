@@ -1,4 +1,6 @@
 {
+  "name": "react-scripts-ws-webextension",
+  "version": "2.1.0",
   "private": true,
   "workspaces": ["packages/*"],
   "scripts": {
