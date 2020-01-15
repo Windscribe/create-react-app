@@ -29,6 +29,9 @@
   "files": [
     "lib/index.js"
   ],
+  "dependencies": {
+    "uglifyjs-webpack-plugin": "~2.2.0"
+  },
   "devDependencies": {
     "@babel/code-frame": "7.0.0",
     "@babel/core": "7.1.0",
