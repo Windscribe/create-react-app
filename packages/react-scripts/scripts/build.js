@@ -70,7 +70,7 @@ let startBuild = target =>
       let spinnyBoi = ora(`Starting build prepare for ${platform}`).start();
       await prepare(platform);
       spinnyBoi.stop();
-      let spinnyBoi = ora(`Starting build for ${platform}`).start();
+      spinnyBoi = ora(`Starting build for ${platform}`).start();
       await startBuild(platform);
       spinnyBoi.succeed(`${platform} build completed`);
     } catch (e) {
