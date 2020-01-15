@@ -57,7 +57,7 @@ const compileBuild = target => () =>
 
 let startBuild = target =>
   new Promise((resolve, reject) => {
-    compileBuild(target)
+    compileBuild(target)()
       .then(resolve)
       .catch(reject);
   });
@@ -65,8 +65,8 @@ let startBuild = target =>
 (async () => {
   await rimraf(paths.appBuild);
   for (let platform of platforms) {
+    let spinnyBoi = ora(`Starting build prepare for ${platform}`).start();
     try {
-      let spinnyBoi = ora(`Starting build prepare for ${platform}`).start();
       await prepare(platform, spinnyBoi);
       spinnyBoi.text = `Running build for ${platform}`;
       await startBuild(platform);
