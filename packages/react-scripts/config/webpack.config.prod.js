@@ -42,6 +42,9 @@ const publicUrl = publicPath.slice(0, -1);
 // Get environment variables to inject into our app.
 const env = getClientEnvironment(publicUrl);
 
+//Skip linting
+const skipLinting = process.env.NO_LINT === 'true';
+
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
 if (env.stringified['process.env'].NODE_ENV !== '"production"') {
@@ -241,30 +244,32 @@ module.exports = {
 
       // First, run the linter.
       // It's important to do this before Babel processes the JS.
-      {
-        test: /\.(js|jsx)$/,
-        enforce: 'pre',
-        use: [
-          {
-            options: {
-              formatter: require.resolve('react-dev-utils/eslintFormatter'),
-              eslintPath: require.resolve('eslint'),
-              // @remove-on-eject-begin
-              // TODO: consider separate config for production,
-              // e.g. to enable no-console and no-debugger only in production.
-              baseConfig: {
-                extends: [require.resolve('eslint-config-react-app')],
-                settings: { react: { version: '999.999.999' } },
+      skipLinting
+        ? {
+            test: /\.(js|jsx)$/,
+            enforce: 'pre',
+            use: [
+              {
+                options: {
+                  formatter: require.resolve('react-dev-utils/eslintFormatter'),
+                  eslintPath: require.resolve('eslint'),
+                  // @remove-on-eject-begin
+                  // TODO: consider separate config for production,
+                  // e.g. to enable no-console and no-debugger only in production.
+                  baseConfig: {
+                    extends: [require.resolve('eslint-config-react-app')],
+                    settings: { react: { version: '999.999.999' } },
+                  },
+                  ignore: false,
+                  useEslintrc: false,
+                  // @remove-on-eject-end
+                },
+                loader: require.resolve('eslint-loader'),
               },
-              ignore: false,
-              useEslintrc: false,
-              // @remove-on-eject-end
-            },
-            loader: require.resolve('eslint-loader'),
-          },
-        ],
-        include: paths.appSrc,
-      },
+            ],
+            include: paths.appSrc,
+          }
+        : {},
       {
         // `mjs` support is still in its infancy in the ecosystem, so we don't
         // support it.
