@@ -7,7 +7,7 @@ const paths = require('../../config/paths');
 const generateManifest = require('./generate-manifest');
 
 const { preparationMethods } = require(paths.appConfig);
-module.exports = async (buildTarget = 'dev') => {
+module.exports = async (buildTarget = 'dev', spinner) => {
   try {
     await rimraf(
       buildTarget === 'dev'
@@ -19,7 +19,7 @@ module.exports = async (buildTarget = 'dev') => {
 
     if (preparationMethods.length > 0) {
       for (let fn of preparationMethods) {
-        await fn(buildTarget);
+        await fn(buildTarget, spinner);
       }
     }
 

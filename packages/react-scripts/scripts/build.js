@@ -57,8 +57,7 @@ const compileBuild = target => () =>
 
 let startBuild = target =>
   new Promise((resolve, reject) => {
-    prepare(target)
-      .then(compileBuild(target))
+    compileBuild(target)
       .then(resolve)
       .catch(reject);
   });
@@ -68,9 +67,8 @@ let startBuild = target =>
   for (let platform of platforms) {
     try {
       let spinnyBoi = ora(`Starting build prepare for ${platform}`).start();
-      await prepare(platform);
-      spinnyBoi.stop();
-      spinnyBoi = ora(`Starting build for ${platform}`).start();
+      await prepare(platform, spinnyBoi);
+      spinnyBoi.text = `Running build for ${platform}`;
       await startBuild(platform);
       spinnyBoi.succeed(`${platform} build completed`);
     } catch (e) {
